@@ -1,0 +1,139 @@
+[
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "api-расчёта-стоимости-авиабилета;успешный-расчёт-стоимости-билета",
+        "keyword": "Scenario",
+        "line": 2,
+        "name": "Успешный расчёт стоимости билета",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2984699
+            }
+          },
+          {
+            "arguments": [
+              {
+                "content": "{\n  \"passport\": \"AB123456\",\n  \"flightClass\": \"economy\",\n  \"baggage\": 20\n}",
+                "line": 4
+              }
+            ],
+            "keyword": "When ",
+            "line": 3,
+            "name": "I send POST request to \"/api/ticket\" with body:",
+            "match": {
+              "location": "steps\\ticket.steps.js:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 92475300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 11,
+            "name": "response status should be 200",
+            "match": {
+              "location": "steps\\ticket.steps.js:18"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 413599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 12,
+            "name": "response field \"totalPrice\" should be 4500",
+            "match": {
+              "location": "steps\\ticket.steps.js:22"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 350900
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "api-расчёта-стоимости-авиабилета;ошибка-при-неизвестном-пассажире",
+        "keyword": "Scenario",
+        "line": 14,
+        "name": "Ошибка при неизвестном пассажире",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 250000
+            }
+          },
+          {
+            "arguments": [
+              {
+                "content": "{\n  \"passport\": \"ZZ999999\",\n  \"flightClass\": \"economy\",\n  \"baggage\": 20\n}",
+                "line": 16
+              }
+            ],
+            "keyword": "When ",
+            "line": 15,
+            "name": "I send POST request to \"/api/ticket\" with body:",
+            "match": {
+              "location": "steps\\ticket.steps.js:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8561200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 23,
+            "name": "response status should be 404",
+            "match": {
+              "location": "steps\\ticket.steps.js:18"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 188099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 24,
+            "name": "response field \"error\" should be \"Пассажир не найден. Проверьте номер паспорта.\"",
+            "match": {
+              "location": "steps\\ticket.steps.js:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 327700
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "api-расчёта-стоимости-авиабилета",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "API расчёта стоимости авиабилета",
+    "tags": [],
+    "uri": "features\\ticket.feature"
+  }
+]
