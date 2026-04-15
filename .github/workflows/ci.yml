@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main, master ]
 
+permissions:
+  contents: read
+
 jobs:
   unit-tests:
     name: Unit Tests (Node ${{ matrix.node-version }} / ${{ matrix.os }})
@@ -90,12 +93,12 @@ jobs:
         run: npm install
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
         if: runner.os == 'Linux'
+        run: npx playwright install --with-deps
 
       - name: Install Playwright browsers (macOS)
-        run: npx playwright install
         if: runner.os != 'Linux'
+        run: npx playwright install
 
       - name: Run UI tests
         run: npm run test:ui:ci
@@ -110,31 +113,52 @@ jobs:
             test-results/
             allure-results/
           if-no-files-found: ignore
+
   deploy-report:
     name: Deploy Playwright Report
     runs-on: ubuntu-latest
     needs: [ui-tests]
-    if: always()
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run UI tests again to generate report
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Generate fresh Playwright HTML report
         run: npm run test:ui:ci
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./playwright-report
+          path: ./playwright-report
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
   notify:
     name: Telegram Notify
     runs-on: ubuntu-latest
-    needs: [unit-tests, api-tests, ui-tests]
+    needs: [unit-tests, api-tests, ui-tests, deploy-report]
     if: always()
 
     steps:
@@ -147,9 +171,7 @@ jobs:
             CI/CD завершён
             Репозиторий: ${{ github.repository }}
             Ветка: ${{ github.ref_name }}
-            Коммит: ${{ github.sha }}
             Unit: ${{ needs.unit-tests.result }}
             API: ${{ needs.api-tests.result }}
             UI: ${{ needs.ui-tests.result }}
-            Отчёт:
-            https://Pipi6901.github.io/lab6-ci-cd-final/
+            Report: https://Pipi6901.github.io/lab6-ci-cd-final/
