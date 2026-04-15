@@ -1,0 +1,35 @@
+﻿
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Стоимость авиабилета</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="icon">✈</div>
+    <h1>Авиабилет</h1>
+    <p class="subtitle">Рассчитайте стоимость перелёта</p>
+
+    <label>Номер паспорта</label>
+    <input type="text" id="passport" placeholder="AB123456">
+
+    <label>Класс перелёта</label>
+    <div class="select-wrap">
+      <select id="flightClass">
+        <option value="">— Выберите класс —</option>
+        <option value="economy">Эконом</option>
+        <option value="business">Бизнес</option>
+      </select>
+    </div>
+
+    <label>Вес багажа (кг)</label>
+    <input type="text" id="baggage" placeholder="0">
+
+    <button id="calculateBtn">Рассчитать стоимость</button>
+    <div id="resultArea"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
